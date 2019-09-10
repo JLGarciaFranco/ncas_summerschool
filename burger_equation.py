@@ -7,22 +7,17 @@ def conservative_form():
     print('conservative')
     
 def main():
+    ### solver of burguers equation, forward in time backward in space
     u0=10
-    nt=250
+    nt=1000
     nx=100
     x=np.linspace(0,2*np.pi,nx+1)
-    dx=1./nx
-#    u=u0*np.ones(nx+1)
-    ### ftcs for the first time-step, looping over space
-#    u=u0#*initialBell(x)#*initialBell(x)#[0]=u0
-#    u=np.ones(nx+1)#,nt)
+    alternative_shape=np.exp(-1*(x-np.pi)**2)# - (y-np.pi)^2)
     u=1-np.cos(x)#power(np.sin(2*(x)*np.pi),2)#uold[0]-0.5*c*uold[j]*(uold[1]-uold[nx-1])
     c=0.2
+    u=alternative_shape
     unew=u.copy()
     uold=u.copy()
-#    plt.plot(x,u[:,0],'b',label='FTCS')
- #   plt.savefig('0.png')
-  #  plt.close()
     for nt in range(1,nt):
         for j in range(1,nx):
             unew[j]=u[j]-c*u[j]*(u[j]-u[j-1])   
@@ -31,13 +26,47 @@ def main():
         uold=u.copy()
         u=unew.copy()
         un=1.
+        dx=2*np.pi/nx
         dt=c*dx/un
         t=nt*dt
-        print(1+nt)
-#        plt.plot(x,u0*(x-u[:,nt]*t),'k',label='analytic')
         plt.plot(x,u,'b',label=r'$t=$'+str(nt))
         plt.ylabel('$u$',fontsize=14)
-       # plt.ylim([-1,1])
+        plt.ylim([0,1])
+        plt.axhline(0,linestyle='--',color='black')
+        plt.legend(fancybox=True,fontsize=15)
+        plt.savefig('sine'+str(nt)+'.png')
+        plt.close()
+    print(u)
+def main_2d():
+    ### solver of burguers equation, forward in time backward in space
+    u0=10
+    nt=290
+    nx=100
+    x=np.linspace(0,2*np.pi,nx+1)
+    y=np.linspace(0,2*np.pi,nx+1)
+    x,y=np.meshgrid(x,y)
+    alternative_shape=np.exp(-1*(x-np.pi)**2 - (y-np.pi)**2)
+    u=1-np.cos(x)#power(np.sin(2*(x)*np.pi),2)#uold[0]-0.5*c*uold[j]*(uold[1]-uold[nx-1])
+    c=0.2
+    u=alternative_shape
+    print(u.shape)
+    unew=u.copy()
+    uold=u.copy()
+    for nt in range(1,nt):
+        for j in range(1,nx):
+            for k in range(1,nx):
+                unew[j,k]=uold[j,k]-c*u[j,k]*(u[j,k]-u[j-1,k-1])   
+        unew[0,0]=uold[0,0]-c*u[0,0]*(u[0,0]-u[nx-1,nx-1])
+        unew[nx,nx]=unew[0,0]
+        uold=u.copy()
+        u=unew.copy()
+        un=1.
+        dx=2*np.pi/nx
+        dt=c*dx/un
+        t=nt*dt
+        plt.plot(x,u,'b',label=r'$t=$'+str(nt))
+        plt.ylabel('$u$',fontsize=14)
+        plt.ylim([0,1])
         plt.axhline(0,linestyle='--',color='black')
         plt.legend(fancybox=True,fontsize=15)
         plt.savefig('sine'+str(nt)+'.png')
