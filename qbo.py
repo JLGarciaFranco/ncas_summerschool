@@ -19,6 +19,9 @@ A useful exercise would be to make a movie of the output.
 # Default parameters that work are amplitude = 1 and time = 50, or 0.1 and 500
 from __future__ import (division, print_function)
 import matplotlib as mpl
+#
+print(mpl.get_backend())
+mpl.use('agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from numba import jit
@@ -66,7 +69,7 @@ diffusv = 0.21*famp                     # diffusion scales with forcing amplit
 k1 = 1 ; k2 = 1                         # zonal wavenumbers for the two waves
 c1 = 1 ; c2 = -1                        # phase speeds for the two waves
 #
-rossby = 0                              # 0 for Plumb, 1 for Lindzen-Holton
+rossby = 1                              # 0 for Plumb, 1 for Lindzen-Holton
 
 # Now some numerical values
 # note that z=0 and z=ztop correspond to j = 0 and j = nz-1
@@ -235,7 +238,7 @@ ax1.set_xlim((19.5,40.5))
 ax1.set_yticks([0, 1, 2, 3., 4])
 ax1.set_ylim((0, 3.2))
 fig2.colorbar(pcc, cax=ax2)
-plt.savefig("qbo-contour.pdf")
+plt.savefig("qbo-contour2.pdf")
 show_plot()
 
 ifig += 1
@@ -262,7 +265,7 @@ for ipl in range(1,7):
         ax.set_xlabel('u', style='italic', size=14)
     pass
 pass
-plt.savefig("qbo-period.pdf")  # saves a PDF plot
+plt.savefig("qbo-period2.pdf")  # saves a PDF plot
 show_plot()
 
 ifig += 1
@@ -281,4 +284,4 @@ ax.set_ylabel ('Zonal wind', size='20')
 ax.legend(frameon = True, prop={'size':20,'style':'italic'},loc=3)
 show_plot()
 plt.show()
-plt.savefig("qbowind-time.pdf")  # saves a PDF plot
+plt.savefig("qbowind-time2.pdf")  # saves a PDF plot

@@ -8,15 +8,15 @@ def conservative_form():
     
 def main():
     u0=10
-    nt=40
+    nt=250
     nx=100
     x=np.linspace(0,2*np.pi,nx+1)
     dx=1./nx
 #    u=u0*np.ones(nx+1)
     ### ftcs for the first time-step, looping over space
 #    u=u0#*initialBell(x)#*initialBell(x)#[0]=u0
-    u=np.ones(nx+1)#,nt)
-    u=np.cos(x)#power(np.sin(2*(x)*np.pi),2)#uold[0]-0.5*c*uold[j]*(uold[1]-uold[nx-1])
+#    u=np.ones(nx+1)#,nt)
+    u=1-np.cos(x)#power(np.sin(2*(x)*np.pi),2)#uold[0]-0.5*c*uold[j]*(uold[1]-uold[nx-1])
     c=0.2
     unew=u.copy()
     uold=u.copy()
@@ -37,7 +37,7 @@ def main():
 #        plt.plot(x,u0*(x-u[:,nt]*t),'k',label='analytic')
         plt.plot(x,u,'b',label=r'$t=$'+str(nt))
         plt.ylabel('$u$',fontsize=14)
-        plt.ylim([-1,1])
+       # plt.ylim([-1,1])
         plt.axhline(0,linestyle='--',color='black')
         plt.legend(fancybox=True,fontsize=15)
         plt.savefig('sine'+str(nt)+'.png')
