@@ -9,32 +9,53 @@ def conservative_form():
 def main():
     ### solver of burguers equation, forward in time backward in space
     u0=10
-    nt=1000
+    nt=550
     nx=100
     x=np.linspace(0,2*np.pi,nx+1)
     alternative_shape=np.exp(-1*(x-np.pi)**2)# - (y-np.pi)^2)
     u=1-np.cos(x)#power(np.sin(2*(x)*np.pi),2)#uold[0]-0.5*c*uold[j]*(uold[1]-uold[nx-1])
     c=0.2
+    a=0.001
+    dx=2*np.pi/nx
+    dt=1
+    F = a*dt/dx**2
+    u=np.zeros((nx+1,nt))
     u=alternative_shape
     unew=u.copy()
     uold=u.copy()
-    for nt in range(1,nt):
+    for tt in range(1,nt):
         for j in range(1,nx):
-            unew[j]=u[j]-c*u[j]*(u[j]-u[j-1])   
-        unew[0]=uold[0]-c*u[0]*(u[0]-u[nx-1])
-        unew[nx]=unew[0]
+        #    unew[j]=u[j]-c*u[j]*(u[j]-u[j-1])   
+#            unew[j]=uold[j]-c*u[j]*(u[j]-u[j-1])#+F*(u[j-1] - 2*u[j] + u[j+1])
+            ## add difussion ##
+            unew[j]=u[j]-c*u[j]*(u[j]-u[j-1])+F*(u[j-1] - 2*u[j] + u[j+1])
+#            u[j,tt]=u[j,tt-1]-c*u[j,tt-1]*(u[j,tt-1]-u[j-1,tt-1])
+     #   u[0,tt]=u[0,tt-1]-c*u[0,tt]*(u[0,tt-1]-u[j-1,tt-1])
+        #unew[0]=u[0]-c*u[0]*(u[0]-u[nx-1])
+        #unew[0]=u[0]-c*u[0]*(u[0]-u[nx-1])
+        unew[0]=u[0]-c*u[0]*(u[0]-u[nx-1])#+F*(u[0]-2*u[j-1]+u[1])
+        #unew[0,0]=uold[0,0]-c*u[0,0]*(u[0,0]-u[nx-1,nx-1])
+#        u[nx,tt]=u[0,tt]
+        u[nx]=u[0]
         uold=u.copy()
         u=unew.copy()
-        un=1.
-        dx=2*np.pi/nx
-        dt=c*dx/un
-        t=nt*dt
-        plt.plot(x,u,'b',label=r'$t=$'+str(nt))
+   #     un=1.
+  #      dx=2*np.pi/nx
+ #       dt=c*dx/un
+#        t=nt*dt
+#    plt.contourf(u.T,cmap='viridis')
+ #   plt.colorbar()
+  #  plt.savefig('contourf.png')
+        plt.plot(x,u,'k',label=r'$t=$'+str(tt),linewidth=3)
         plt.ylabel('$u$',fontsize=14)
-        plt.ylim([0,1])
+        plt.xlabel('$x$',fontsize=14)
+        plt.ylim([0,1.1])
         plt.axhline(0,linestyle='--',color='black')
+        plt.minorticks_on()
+        plt.title('FT - backward in space w diffusion',fontsize=14)
         plt.legend(fancybox=True,fontsize=15)
-        plt.savefig('sine'+str(nt)+'.png')
+        plt.savefig('figs/diff'+str(tt)+'.png')
+     
         plt.close()
     print(u)
 def main_2d():
@@ -55,7 +76,7 @@ def main_2d():
     for nt in range(1,nt):
         for j in range(1,nx):
             for k in range(1,nx):
-                unew[j,k]=uold[j,k]-c*u[j,k]*(u[j,k]-u[j-1,k-1])   
+                unew[j,k]=uold[j,k]-c*u[j,k]*(u[j,k]-u[j-1,k])   
         unew[0,0]=uold[0,0]-c*u[0,0]*(u[0,0]-u[nx-1,nx-1])
         unew[nx,nx]=unew[0,0]
         uold=u.copy()
